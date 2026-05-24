@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foodies — Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-card__logo">🍔</div>
+      <h1 class="login-card__title">Foodies</h1>
+      <p class="login-card__subtitle">Admin Dashboard — Enter password to continue</p>
+      <form class="login-card__form" id="loginForm">
+        <input
+          type="password"
+          class="login-card__input"
+          id="loginPassword"
+          placeholder="Enter password"
+          autocomplete="off"
+          required
+        >
+        <p class="login-card__error" id="loginError">Incorrect password. Try again.</p>
+        <button type="submit" class="btn btn--primary btn--block">🔓 Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN LAYOUT ============ -->
+  <div class="admin-layout" id="adminLayout">
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="index.html" class="sidebar__logo">
+        <span class="sidebar__logo-icon">🍔</span>
+        <span class="sidebar__logo-text">Foodies</span>
+        <span class="sidebar__badge">Admin</span>
+      </a>
+
+      <nav class="sidebar__nav">
+        <button class="sidebar__nav-item active" data-view="dashboard">
+          <span class="sidebar__nav-item__icon">📊</span>
+          Dashboard
+        </button>
+        <button class="sidebar__nav-item" data-view="items">
+          <span class="sidebar__nav-item__icon">🍽️</span>
+          Menu Items
+        </button>
+        <button class="sidebar__nav-item" data-view="categories">
+          <span class="sidebar__nav-item__icon">📁</span>
+          Categories
+        </button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <a href="index.html" class="sidebar__view-site">
+          <span>🌐</span>
+          View Storefront →
+        </a>
+        <button class="sidebar__nav-item" id="logoutBtn" style="margin-top: 8px;">
+          <span class="sidebar__nav-item__icon">🚪</span>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar__left">
+          <button class="topbar__mobile-toggle" id="sidebarToggle">☰</button>
+          <span class="topbar__greeting">Welcome back, Admin 👋</span>
+          <h1 class="topbar__title" id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar__actions" id="topbarActions">
+          <button class="btn btn--primary btn--sm" id="addItemBtn" style="display: none;">
+            + Add Item
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== DASHBOARD VIEW ===== -->
+      <div id="dashboardView">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--orange">🍽️</div>
+            <div class="stat-card__value" id="statTotal">0</div>
+            <div class="stat-card__label">Total Items</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--green">✅</div>
+            <div class="stat-card__value" id="statAvailable">0</div>
+            <div class="stat-card__label">Available</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--blue">📁</div>
+            <div class="stat-card__value" id="statCategories">0</div>
+            <div class="stat-card__label">Categories</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--purple">🚫</div>
+            <div class="stat-card__value" id="statUnavailable">0</div>
+            <div class="stat-card__label">Unavailable</div>
+          </div>
+        </div>
+
+        <!-- Recent Items Table (Dashboard) -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-header__title">Recent Menu Items</h3>
+            <div class="table-header__actions">
+              <button class="btn btn--ghost btn--sm" id="dashViewAllBtn">View All →</button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== ITEMS VIEW ===== -->
+      <div id="itemsView" style="display: none;">
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-header__title">All Menu Items</h3>
+            <div class="table-header__actions">
+              <div class="search-box">
+                <span class="search-box__icon">🔍</span>
+                <input type="text" class="search-box__input" id="searchInput" placeholder="Search items...">
+              </div>
+              <button class="btn btn--primary btn--sm" id="addItemBtn2">
+                + Add Item
+              </button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="hide-mobile">Category</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="itemsTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== CATEGORIES VIEW ===== -->
+      <div id="categoriesView" style="display: none;">
+        <div class="stats-grid" id="categoryStats">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ============ ADD/EDIT ITEM MODAL ============ -->
+  <div class="admin-modal-overlay" id="itemModalOverlay">
+    <div class="admin-modal">
+      <div class="admin-modal__header">
+        <h2 class="admin-modal__title" id="itemModalTitle">Add New Item</h2>
+        <button class="admin-modal__close" id="itemModalClose">✕</button>
+      </div>
+      <div class="admin-modal__body">
+        <form id="itemForm" novalidate>
+          <input type="hidden" id="editItemId" value="">
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Item Name <span class="req">*</span></label>
+            <input type="text" class="admin-form-input" id="itemName" placeholder="e.g. Zinger Burger" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Description <span class="req">*</span></label>
+            <textarea class="admin-form-textarea" id="itemDesc" rows="3" placeholder="Short description of the item..." required></textarea>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-form-label">Price (Rs.) <span class="req">*</span></label>
+              <input type="number" class="admin-form-input" id="itemPrice" placeholder="e.g. 650" min="0" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label">Category <span class="req">*</span></label>
+              <select class="admin-form-select" id="itemCategory" required>
+                <option value="">Select category</option>
+                <option value="burgers">🍔 Burgers</option>
+                <option value="pizza">🍕 Pizza</option>
+                <option value="fries">🍟 Fries & Sides</option>
+                <option value="wraps">🌯 Wraps</option>
+                <option value="drinks">🥤 Drinks</option>
+                <option value="desserts">🍰 Desserts</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Emoji Icon <span class="req">*</span></label>
+            <div class="emoji-picker" id="emojiPicker">
+              <button type="button" class="emoji-option" data-emoji="🍔">🍔</button>
+              <button type="button" class="emoji-option" data-emoji="🍕">🍕</button>
+              <button type="button" class="emoji-option" data-emoji="🍟">🍟</button>
+              <button type="button" class="emoji-option" data-emoji="🌯">🌯</button>
+              <button type="button" class="emoji-option" data-emoji="🥤">🥤</button>
+              <button type="button" class="emoji-option" data-emoji="🍰">🍰</button>
+              <button type="button" class="emoji-option" data-emoji="🧀">🧀</button>
+              <button type="button" class="emoji-option" data-emoji="🍗">🍗</button>
+              <button type="button" class="emoji-option" data-emoji="🥭">🥭</button>
+              <button type="button" class="emoji-option" data-emoji="🍋">🍋</button>
+              <button type="button" class="emoji-option" data-emoji="🍫">🍫</button>
+              <button type="button" class="emoji-option" data-emoji="🎂">🎂</button>
+              <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+              <button type="button" class="emoji-option" data-emoji="⭐">⭐</button>
+            </div>
+            <input type="hidden" id="itemEmoji" value="">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Image (Optional)</label>
+            <div class="image-upload">
+              <div class="image-upload__area" id="imageUploadArea">
+                <img class="image-upload__preview" id="imagePreview" src="" alt="Preview">
+                <div class="image-upload__icon" id="imageUploadIcon">📷</div>
+                <div class="image-upload__text" id="imageUploadText"><span>Click to upload</span> or drag & drop</div>
+              </div>
+              <input type="file" class="image-upload__input" id="itemImage" accept="image/*">
+              <button type="button" class="image-upload__remove" id="imageRemoveBtn">✕</button>
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="btn btn--ghost" id="itemCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn--primary" id="itemSubmitBtn">Add Item</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DELETE CONFIRM MODAL ============ -->
+  <div class="admin-modal-overlay" id="deleteModalOverlay">
+    <div class="admin-modal" style="max-width: 420px;">
+      <div class="admin-modal__body">
+        <div class="confirm-dialog">
+          <div class="confirm-dialog__icon">🗑️</div>
+          <h3 class="confirm-dialog__title">Delete Item?</h3>
+          <p class="confirm-dialog__text" id="deleteItemName">Are you sure you want to delete this item? This action cannot be undone.</p>
+          <div class="confirm-dialog__actions">
+            <button class="btn btn--ghost" id="deleteCancelBtn">Cancel</button>
+            <button class="btn btn--danger" id="deleteConfirmBtn">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
